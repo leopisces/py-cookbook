@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 import type { Chapter } from "../types/content";
 
 interface SidebarProps {
   chapters: Chapter[];
+  theme: "light" | "dark";
+  toggleTheme: () => void;
 }
 
-export default function Sidebar({ chapters }: SidebarProps) {
+export default function Sidebar({ chapters, theme, toggleTheme }: SidebarProps) {
   const { chapterId, sectionId } = useParams<{
     chapterId: string;
     sectionId: string;
@@ -33,7 +36,7 @@ export default function Sidebar({ chapters }: SidebarProps) {
       {/* Mobile toggle */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-lg shadow-lg"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 dark:bg-gray-700 text-white rounded-lg shadow-lg"
       >
         {sidebarOpen ? "✕" : "☰"}
       </button>
@@ -41,18 +44,22 @@ export default function Sidebar({ chapters }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static inset-y-0 left-0 z-40 w-72 bg-gray-900 text-gray-100
+          fixed lg:static inset-y-0 left-0 z-40 w-72
+          bg-gray-900 dark:bg-gray-950 text-gray-100
           transform transition-transform duration-200 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
           overflow-y-auto
         `}
       >
-        <div className="sticky top-0 bg-gray-900 p-4 border-b border-gray-700">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80">
-            <span className="text-2xl">🐍</span>
-            <span className="text-lg font-bold text-white">Python Cookbook</span>
-          </Link>
-          <p className="text-xs text-gray-400 mt-1">交互式 Python 学习平台</p>
+        <div className="sticky top-0 bg-gray-900 dark:bg-gray-950 p-4 border-b border-gray-700 dark:border-gray-800">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80">
+              <span className="text-2xl">🐍</span>
+              <span className="text-lg font-bold text-white">Python Cookbook</span>
+            </Link>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">交互式 Python 学习平台</p>
         </div>
 
         <nav className="p-2">
@@ -69,7 +76,7 @@ export default function Sidebar({ chapters }: SidebarProps) {
                     transition-colors duration-150
                     ${isActiveChapter
                       ? "bg-blue-600/20 text-blue-300"
-                      : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                      : "text-gray-300 hover:bg-gray-800 dark:hover:bg-gray-700 hover:text-white"
                     }
                   `}
                 >
@@ -111,7 +118,7 @@ export default function Sidebar({ chapters }: SidebarProps) {
                             block px-3 py-1.5 rounded text-sm transition-colors duration-150
                             ${isActive
                               ? "bg-blue-600 text-white font-medium"
-                              : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                              : "text-gray-400 hover:bg-gray-800 dark:hover:bg-gray-700 hover:text-gray-200"
                             }
                           `}
                         >

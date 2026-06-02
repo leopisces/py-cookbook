@@ -1,18 +1,20 @@
 import { Outlet, useParams, Navigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import ThemeToggle from "./ThemeToggle";
 import type { Chapter } from "../types/content";
 
 interface LayoutProps {
   chapters: Chapter[];
+  theme: "light" | "dark";
+  toggleTheme: () => void;
 }
 
-export default function Layout({ chapters }: LayoutProps) {
+export default function Layout({ chapters, theme, toggleTheme }: LayoutProps) {
   const { chapterId, sectionId } = useParams<{
     chapterId: string;
     sectionId: string;
   }>();
 
-  // 如果没有指定章节，重定向到第一个
   if (!chapterId || !sectionId) {
     const firstChapter = chapters[0];
     const firstSection = firstChapter?.sections[0];
@@ -23,9 +25,9 @@ export default function Layout({ chapters }: LayoutProps) {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar chapters={chapters} />
-      <main className="flex-1 overflow-auto">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <Sidebar chapters={chapters} theme={theme} toggleTheme={toggleTheme} />
+      <main className="flex-1 overflow-auto bg-white dark:bg-gray-800 transition-colors">
         <Outlet />
       </main>
     </div>

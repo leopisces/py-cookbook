@@ -14,7 +14,6 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
   const [code, setCode] = useState(section.code);
   const pyodide = usePyodide();
 
-  // 当 section 变化时重置代码
   const [prevSection, setPrevSection] = useState(section.id);
   if (prevSection !== section.id) {
     setCode(section.code);
@@ -33,28 +32,27 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* 描述面板 */}
       <DescriptionPanel section={section} />
 
-      {/* Pyodide 加载状态 */}
       <PyodideLoader
         isLoading={pyodide.isLoading}
         isLoaded={pyodide.isLoaded}
         onLoad={pyodide.load}
       />
 
-      {/* 代码编辑器 + 输出 */}
       <div className="flex-1 flex flex-col min-h-0">
         {/* 工具栏 */}
-        <div className="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
-          <span className="text-sm text-gray-400 font-mono">
+        <div className="flex items-center justify-between px-4 py-2 bg-gray-800 dark:bg-gray-900
+                        border-b border-gray-700 dark:border-gray-800 transition-colors">
+          <span className="text-sm text-gray-400 dark:text-gray-500 font-mono">
             {section.chapterId}/{section.id}.py
           </span>
           <div className="flex items-center gap-2">
             <button
               onClick={handleReset}
-              className="px-3 py-1 text-sm text-gray-400 hover:text-white
-                         bg-gray-700 hover:bg-gray-600 rounded transition-colors"
+              className="px-3 py-1 text-sm text-gray-400 dark:text-gray-500 hover:text-white
+                         bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700
+                         rounded transition-colors"
             >
               重置
             </button>
@@ -64,7 +62,7 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
               className={`
                 px-4 py-1 text-sm font-medium rounded transition-colors
                 ${pyodide.isRunning || pyodide.isLoading
-                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  ? "bg-gray-600 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
                   : "bg-green-600 hover:bg-green-500 text-white"
                 }
               `}
