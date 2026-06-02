@@ -51,6 +51,39 @@ test.describe("课程页", () => {
   });
 });
 
+test.describe("深色模式", () => {
+  test("点击切换按钮启用深色模式", async ({ page }) => {
+    await page.goto("/learn/01-basics/01_hello_world");
+    await page.waitForSelector(".cm-editor", { timeout: 10000 });
+
+    // 找到深色模式切换按钮
+    const toggleButton = page.locator('button[title*="暗色"]');
+    await expect(toggleButton).toBeVisible();
+
+    // 点击切换到深色模式
+    await toggleButton.click();
+
+    // 验证 html 元素添加了 dark class
+    await expect(page.locator("html")).toHaveClass(/dark/);
+
+    // 验证侧边栏背景变为深色
+    const sidebar = page.locator("aside");
+    await expect(sidebar).toHaveClass(/bg-gray-950/);
+  });
+
+  test("深色模式下首页样式正确", async ({ page }) => {
+    await page.goto("/");
+
+    // 点击深色模式按钮
+    const toggleButton = page.locator('button[title*="暗色"]');
+    await toggleButton.click();
+
+    // 验证页面背景为深色
+    const mainDiv = page.locator("div.min-h-screen");
+    await expect(mainDiv).toHaveClass(/dark:from-gray-900/);
+  });
+});
+
 test.describe("Pyodide 代码执行", () => {
   test("运行 Python 代码并显示输出", async ({ page }) => {
     test.setTimeout(60000);
