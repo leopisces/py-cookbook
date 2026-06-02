@@ -18,7 +18,7 @@ async function loadPyodideOnce(): Promise<unknown> {
 
   pyodidePromise = (async () => {
     // 动态加载 Pyodide 脚本
-    if (!(window as Record<string, unknown>).loadPyodide) {
+    if (!(window as unknown as Record<string, unknown>).loadPyodide) {
       await new Promise<void>((resolve, reject) => {
         const script = document.createElement("script");
         script.src = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js";
@@ -28,7 +28,7 @@ async function loadPyodideOnce(): Promise<unknown> {
       });
     }
 
-    const loadFn = (window as Record<string, unknown>).loadPyodide as (opts: Record<string, unknown>) => Promise<unknown>;
+    const loadFn = (window as unknown as Record<string, unknown>).loadPyodide as (opts: Record<string, unknown>) => Promise<unknown>;
     pyodideInstance = await loadFn({
       indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/",
     });
