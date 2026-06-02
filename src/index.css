@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Tailwind CSS v4 class-based dark mode */
+@variant dark (&:is(.dark *));
+
 /* 全局样式 */
 *,
 *::before,
