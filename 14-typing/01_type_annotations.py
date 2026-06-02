@@ -271,7 +271,7 @@ def demo_any_noreturn():
     # Never 是底部类型(bottom type)，是任何类型的子类型
     # NoReturn 在 3.11+ 被标记为 deprecated，建议使用 Never
     print("\n  Python 3.11+ 新增 typing.Never")
-    print("    Never 是"底部类型"(bottom type)")
+    print("    Never 是'底部类型'(bottom type)")
     print("    Never 是任何类型的子类型")
     print("    推荐在 Python 3.11+ 使用 Never 代替 NoReturn")
 

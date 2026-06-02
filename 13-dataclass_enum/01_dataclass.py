@@ -11,7 +11,7 @@ dataclass 数据类 - Python 3.7+ 的数据容器利器
   - dataclass 与 typing 结合 (Optional/Union/List/ClassVar)
   - asdict / astuple 转换
 """
-from dataclasses import dataclass, field, asdict, astuple, fields, is_dataclass
+from dataclasses import dataclass, field, asdict, astuple, fields, is_dataclass, MISSING
 from typing import Optional, List, ClassVar, Any
 import math
 
@@ -386,9 +386,11 @@ def demo_typing():
     print(f"  tax_rate (ClassVar): {Order.tax_rate}")
 
     # ClassVar 不在 __init__ 参数中，不在字段列表里
-    print(f"\n  ClassVar 验证: tax_rate 不出现在实例字段中")
-    print(f"  hasattr(o, 'tax_rate'): {hasattr(o, 'tax_rate')}")  # False (实例属性)
-    print(f"  Order.tax_rate: {Order.tax_rate}")                  # True  (类属性)
+    print(f"\n  ClassVar 验证: tax_rate 不出现在 fields() 中")
+    field_names = {f.name for f in fields(Order)}
+    print(f"  'tax_rate' in fields()? {'tax_rate' in field_names}")
+    print(f"  但可通过实例访问 (解析为类属性): o.tax_rate = {o.tax_rate}")
+    print(f"  Order.tax_rate: {Order.tax_rate}")
 
     # 嵌套 dataclass
     @dataclass
@@ -465,8 +467,14 @@ def demo_asdict_astuple():
     # fields() 获取字段元数据
     print(f"\n  fields() 获取字段信息:")
     for f in fields(Person):
-        default = f.default if f.default is not field(default_factory=list).default else "<factory>"
-        print(f"    {f.name}: type={f.type.__name__}{'?', ' (Optional)' if 'Optional' in str(f.type) else ''}, default={default}")
+        if f.default is not MISSING:
+            default = repr(f.default)
+        elif f.default_factory is not MISSING:
+            default = f"<factory: {f.default_factory}>"
+        else:
+            default = "<必填>"
+        type_name = getattr(f.type, '__name__', str(f.type))
+        print(f"    {f.name}: type={type_name}, default={default}")
 
 
 # ==============================
@@ -485,8 +493,8 @@ if __name__ == "__main__":
 
 # ============================================================
 # 相关主题:
-#   - 13-dataclass_enum/02_enum.py   → Python 枚举类型详解
-#   - 05-oop/01_class.py             → 面向对象基础 (class 定义)
-#   - 05-oop/03_magic_methods.py     → 魔术方法与类型注解
-#   - 04-functions/03_decorator.py   → 装饰器 (@dataclass 本身也是装饰器)
+#   - 13-dataclass_enum/02_enum.py   -> Python 枚举类型详解
+#   - 05-oop/01_class.py             -> 面向对象基础 (class 定义)
+#   - 05-oop/03_magic_methods.py     -> 魔术方法与类型注解
+#   - 04-functions/03_decorator.py   -> 装饰器 (@dataclass 本身也是装饰器)
 # ============================================================

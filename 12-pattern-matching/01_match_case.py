@@ -162,15 +162,18 @@ def demo_mapping_patterns():
 
     def match_dict(d):
         """匹配字典结构"""
+        # 注意: case {} 会匹配任意字典(不限于空字典)!
+        # 映射模式 {} 表示"无键约束", 因此匹配所有映射类型
+        # 如需仅匹配空字典, 使用守卫条件: case {} if len(d) == 0
         match d:
-            case {}:
-                return "空字典"
             case {"name": str(name), "age": int(age)}:
                 return f"用户: {name}, 年龄: {age}"
             case {"name": str(name)}:
                 return f"仅姓名: {name}"
             case {"error": str(msg)}:
                 return f"错误信息: {msg}"
+            case {} if len(d) == 0:
+                return "空字典"
             case _:
                 return f"未知结构: {d}"
 
@@ -574,7 +577,7 @@ def demo_nested_patterns():
     print(f"  parse_api_response({{'status':'ok','data':{{'count':100}}}})")
     print(f"    → {parse_api_response({'status': 'ok', 'data': {'count': 100}})}")
     print(f"  parse_api_response({{'status':'error','message':'超时'}})")
-    print(f"    → {parse_api_response({'status': 'error', 'message': '超时'}})}")
+    print(f"    → {parse_api_response({'status': 'error', 'message': '超时'})}")
 
     print()
 
@@ -654,10 +657,12 @@ def demo_practical_examples():
                 return {"action": "help", "msg": "显示帮助"}
             case ["quit" | "exit" | "q"]:
                 return {"action": "quit", "msg": "退出程序"}
-            case ["add", int(a), int(b)]:
-                return {"action": "add", "result": a + b, "msg": f"{a} + {b} = {a + b}"}
-            case ["mul", int(a), int(b)]:
-                return {"action": "mul", "result": a * b, "msg": f"{a} * {b} = {a * b}"}
+            case ["add", str(a), str(b)] if a.lstrip('-').isdigit() and b.lstrip('-').isdigit():
+                ai, bi = int(a), int(b)
+                return {"action": "add", "result": ai + bi, "msg": f"{ai} + {bi} = {ai + bi}"}
+            case ["mul", str(a), str(b)] if a.lstrip('-').isdigit() and b.lstrip('-').isdigit():
+                ai, bi = int(a), int(b)
+                return {"action": "mul", "result": ai * bi, "msg": f"{ai} * {bi} = {ai * bi}"}
             case ["greet", str(name)]:
                 return {"action": "greet", "msg": f"你好, {name}!"}
             case ["set", str(key), str(value)]:
@@ -689,33 +694,31 @@ def demo_practical_examples():
         match code:
             case int(c) if 100 <= c < 200:
                 return f"{c} 信息响应 (Informational)"
-            case 200:
+            case 200 as c:
                 return f"{c} 成功 (OK)"
-            case 201:
+            case 201 as c:
                 return f"{c} 已创建 (Created)"
-            case 204:
+            case 204 as c:
                 return f"{c} 无内容 (No Content)"
-            case 301 | 302 | 307 | 308:
+            case 301 | 302 | 307 | 308 as c:
                 return f"{c} 重定向 (Redirect)"
-            case 304:
+            case 304 as c:
                 return f"{c} 未修改 (Not Modified)"
-            case 400:
+            case 400 as c:
                 return f"{c} 错误请求 (Bad Request)"
-            case 401 | _ if isinstance(code, int) and code == 403:
+            case 401 | 403 as c:
                 return f"{c} 认证/授权失败 (Unauthorized/Forbidden)"
-            case 403:
-                return f"{c} 禁止访问 (Forbidden)"
-            case 404:
+            case 404 as c:
                 return f"{c} 未找到 (Not Found)"
-            case 405:
+            case 405 as c:
                 return f"{c} 方法不允许 (Method Not Allowed)"
             case int(c) if 400 <= c < 500:
                 return f"{c} 客户端错误 (Client Error)"
-            case 500:
+            case 500 as c:
                 return f"{c} 服务器内部错误 (Internal Server Error)"
-            case 502:
+            case 502 as c:
                 return f"{c} 网关错误 (Bad Gateway)"
-            case 503:
+            case 503 as c:
                 return f"{c} 服务不可用 (Service Unavailable)"
             case int(c) if 500 <= c < 600:
                 return f"{c} 服务器错误 (Server Error)"
