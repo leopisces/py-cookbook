@@ -9,6 +9,8 @@ asyncio.gather()、异步 HTTP 请求概念、异步文件操作概念。
 
 import asyncio
 import time
+import tempfile
+import os
 
 
 # ========== 演示 1: async/await 基本用法 ==========
@@ -213,9 +215,6 @@ async def demo_async_file():
         content = await loop.run_in_executor(None, _read)
         print(f"  读取内容: {content.strip()}")
         return content
-
-    import tempfile
-    import os
 
     # 创建临时文件进行演示
     fd, tmp_path = tempfile.mkstemp(suffix=".txt", prefix="async_demo_")

@@ -330,3 +330,8 @@ if __name__ == "__main__":
     demo_class_decorator_and_stacking()
     demo_common_patterns()
     print("\n[OK] 所有装饰器演示完成！")
+
+# ============================================================
+# 相关主题:
+#   - 09-stdlib/19_functools.py  → wraps/lru_cache 等装饰器工具
+# ============================================================

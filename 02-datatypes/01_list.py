@@ -10,6 +10,9 @@ Python 列表 (List)
   - 列表复制 (浅拷贝与深拷贝)
 """
 
+import copy
+
+
 def main():
     # ========== 1. 列表的创建 ==========
     print("=== 1. 列表的创建 ===")
@@ -170,8 +173,6 @@ def main():
 
     # 浅拷贝与深拷贝的区别
     print("\n--- 浅拷贝 vs 深拷贝 ---")
-    import copy
-
     nested_list = [[1, 2], [3, 4]]
     shallow_copy = nested_list.copy()         # 浅拷贝
     deep_copy = copy.deepcopy(nested_list)    # 深拷贝

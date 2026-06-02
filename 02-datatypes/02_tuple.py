@@ -10,6 +10,9 @@ Python 元组 (Tuple)
   - 元组的应用场景
 """
 
+from collections import namedtuple
+
+
 def main():
     # ========== 1. 元组的创建 ==========
     print("=== 1. 元组的创建 ===")
@@ -161,7 +164,6 @@ def main():
     print(f"坐标 (1, 0) 是: {locations[(1, 0)]}")
 
     # 场景3: 命名元组（更可读的轻量数据结构）
-    from collections import namedtuple
     Student = namedtuple("Student", ["name", "age", "score"])
     alice = Student("Alice", 20, 95)
     print(f"\n命名元组: {alice}")

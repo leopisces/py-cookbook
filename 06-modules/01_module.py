@@ -13,9 +13,12 @@ import sys
 import os
 import tempfile
 import importlib
+import shutil
 
 
 def main():
+    # 注: 本函数中的 import 语句均为教学演示，
+    # 展示 Python 导入机制的各种用法，并非 PEP 8 违规。
     # ========== 1. import 的多种方式 ==========
     print("=== 1. import 的多种方式 ===")
 
@@ -141,7 +144,6 @@ print("  [utils 子模块已加载]")
             del sys.modules["mypackage"]
         if "mypackage.utils" in sys.modules:
             del sys.modules["mypackage.utils"]
-        import shutil
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     # ========== 5. 绝对导入 vs 相对导入 ==========

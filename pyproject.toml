@@ -1,0 +1,37 @@
+[project]
+name = "py-cookbook"
+version = "0.1.0"
+description = "Python 学习教程项目，参照菜鸟教程 Python3 知识体系，每个知识点一个可执行 demo 文件"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Leopisces" }]
+keywords = ["python", "tutorial", "cookbook", "learning"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "ruff>=0.1"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "C4"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint.isort]
+known-first-party = []
+
+[tool.pytest.ini_options]
+testpaths = ["15-testing"]
+python_files = ["01_pytest_basics.py", "02_pytest_advanced.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+markers = [
+    "slow: marks tests as slow",
+    "skip: marks tests to skip",
+]

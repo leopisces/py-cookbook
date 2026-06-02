@@ -9,6 +9,7 @@
 
 import sys
 import io
+import time
 
 
 def main():
@@ -58,7 +59,6 @@ def main():
     print("flush=True 强制立即输出，不等待缓冲区填满")
     print("适用于实时日志、进度条等场景")
     # 演示（在脚本中效果不明显，但在长时间运行的程序中很有用）
-    import time
     print("处理中", end="", flush=True)
     time.sleep(0.1)  # 模拟耗时操作
     print(".", end="", flush=True)

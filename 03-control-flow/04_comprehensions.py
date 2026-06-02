@@ -6,6 +6,9 @@ Python 推导式: 列表推导式、字典推导式、集合推导式、
 参考: https://www.runoob.com/python3/python-comprehensions.html
 """
 
+import sys
+
+
 def demo_list_comprehension():
     """演示 1: 列表推导式 (List Comprehension)"""
     print("=" * 50)
@@ -140,7 +143,6 @@ def demo_generator_expression():
     print(f"\n  sum(x**2 for x in range(1,11)) = {total}")
 
     # 内存对比
-    import sys
     list_comp = [x for x in range(1000000)]
     gen_expr = (x for x in range(1000000))
     print(f"\n  内存占用对比:")
@@ -197,3 +199,8 @@ if __name__ == "__main__":
     demo_generator_expression()
     demo_nested_comprehension()
     print("\n[OK] 所有推导式演示完成！")
+
+# ============================================================
+# 相关主题:
+#   - 04-functions/04_iterator_generator.py  → 生成器表达式与惰性求值
+# ============================================================

@@ -53,7 +53,9 @@ py-cookbook/
 │    └ 04_with_statement.py    # with语句(上下文管理器)
 │
 ├── 08-errors/              # 错误与异常
-│    └ 01_errors_exceptions.py  # 异常处理(try/except/自定义/链)
+│   ├── 01_try_except.py         # try/except基础(捕获/else/finally/常见异常/assert)
+│   ├── 02_custom_exceptions.py  # 自定义异常(ValidationError/BusinessError)
+│   └ 03_exception_chaining.py   # 异常链(raise from/from None/__cause__)
 │
 ├── 09-stdlib/              # 标准库
 │   ├── 01_math.py              # math(常量/取整/三角函数)
@@ -71,17 +73,22 @@ py-cookbook/
 │   ├── 13_stringio.py          # StringIO与BytesIO(内存缓冲)
 │   ├── 14_logging.py           # logging(配置/Handler/格式化)
 │   ├── 15_subprocess.py        # subprocess(run/Popen/管道)
-│     16_queue.py               # queue(生产者-消费者/优先级)
+│   ├── 16_queue.py              # queue(生产者-消费者/优先级)
+│   ├── 17_itertools.py          # itertools(无限迭代/累积/组合排列/实用组合)
+│   ├── 18_collections.py        # collections(namedtuple/defaultdict/Counter/deque/ChainMap)
+│   └── 19_functools.py          # functools(partial/reduce/lru_cache/total_ordering/singledispatch)
 │
 ├── 10-advanced/            # 高级特性
 │   ├── 01_threading.py         # 多线程(Thread/Lock/Event/线程池/GIL)
 │   ├── 02_asyncio.py           # 异步编程(async/await/gather)
 │   ├── 03_xml.py               # XML解析(ElementTree)
-│    └ 04_socket.py             # 网络编程(TCP/UDP/echo服务)
+│   ├── 04_socket.py             # 网络编程(TCP/UDP/echo服务)
+│   └ 05_multiprocessing.py    # 多进程(Process/Queue/共享内存/进程池/对比threading)
 │
 ├── 11-builtin/             # 内置函数
-│    └ 01_builtin_functions.py  # 40+内置函数(类型/数学/迭代/对象)
-│
+│   ├── 01_type_functions.py    # 类型与对象(30+函数: type/isinstance/repr/id/dir等)
+│   ├── 02_math_iteration.py    # 数学与迭代(20+函数: abs/round/sum/map/filter等)
+│    └ 03_object_io.py         # 输入输出与执行(open/eval/exec/globals等)
 ├── .gitignore
 └ README.md
 ```
@@ -111,10 +118,10 @@ python 01-basics/01_hello_world.py && python 01-basics/02_syntax.py
 | 05-oop 面向对象 | 3 | 类、继承多态、魔术方法、类型注解 |
 | 06-modules 模块 | 2 | import机制、__name__ |
 | 07-io 输入输出 | 4 | print格式化、文件读写、OS模块、with语句 |
-| 08-errors 异常 | 1 | try/except、自定义异常、异常链 |
-| 09-stdlib 标准库 | 16 | math/random/datetime/re/json/csv/sys/hashlib/pickle/logging等 |
-| 10-advanced 高级 | 4 | 多线程、异步、XML、网络编程 |
-| 11-builtin 内置函数 | 1 | 40+内置函数分类详解 |
+| 08-errors 异常 | 3 | try/except、自定义异常、异常链 |
+| 09-stdlib 标准库 | 19 | math/random/datetime/re/json/csv/sys/hashlib/pickle/logging/itertools/collections/functools等 |
+| 10-advanced 高级 | 5 | 多线程、异步、XML、网络编程、多进程 |
+| 11-builtin 内置函数 | 3 | 类型/对象、数学/迭代、IO/执行 |
 
 ## License
 

@@ -12,17 +12,131 @@
 from typing import List, Dict, Optional, Union, Tuple, Callable
 
 
+# ========== 1. __call__ 让实例像函数一样调用 ==========
+class Multiplier:
+    """可调用对象：实例可以像函数一样被调用"""
+    def __init__(self, factor):
+        self.factor = factor
+
+    def __call__(self, x):
+        return x * self.factor
+
+
+# ========== 2. __len__ / __getitem__ 容器模拟 ==========
+class Playlist:
+    """模拟一个播放列表，支持 len() 和索引访问"""
+    def __init__(self, songs):
+        self._songs = list(songs)
+
+    def __len__(self):
+        # len(obj) 会调用此方法
+        return len(self._songs)
+
+    def __getitem__(self, index):
+        # obj[index] 会调用此方法
+        return self._songs[index]
+
+    def __contains__(self, song):
+        # in 运算符会调用此方法
+        return song in self._songs
+
+
+# ========== 3. __iter__ 迭代器协议 ==========
+class Countdown:
+    """倒计时迭代器"""
+    def __init__(self, start):
+        self.start = start
+
+    def __iter__(self):
+        # 返回一个迭代器
+        self.current = self.start
+        return self
+
+    def __next__(self):
+        # 每次迭代调用，直到 StopIteration
+        if self.current < 0:
+            raise StopIteration
+        value = self.current
+        self.current -= 1
+        return value
+
+
+# ========== 4. 比较运算：__eq__ / __lt__ ==========
+class Money:
+    """带比较运算的钱包类"""
+    def __init__(self, amount):
+        self.amount = amount
+
+    def __eq__(self, other):
+        # == 运算符
+        if isinstance(other, Money):
+            return self.amount == other.amount
+        return NotImplemented
+
+    def __lt__(self, other):
+        # < 运算符
+        if isinstance(other, Money):
+            return self.amount < other.amount
+        return NotImplemented
+
+    def __le__(self, other):
+        # <= 运算符
+        return self.__lt__(other) or self.__eq__(other)
+
+    def __repr__(self):
+        return f"Money({self.amount})"
+
+
+# ========== 5. 算术运算：__add__ ==========
+class Vector:
+    """二维向量，支持加法运算"""
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        # + 运算符
+        if isinstance(other, Vector):
+            return Vector(self.x + other.x, self.y + other.y)
+        return NotImplemented
+
+    def __mul__(self, scalar):
+        # * 运算符（标量乘法）
+        return Vector(self.x * scalar, self.y * scalar)
+
+    def __repr__(self):
+        return f"Vector({self.x}, {self.y})"
+
+
+# ========== 6. 上下文管理器：__enter__ / __exit__ ==========
+class DatabaseConnection:
+    """模拟数据库连接，支持 with 语句"""
+    def __init__(self, db_name):
+        self.db_name = db_name
+        self.connected = False
+
+    def __enter__(self):
+        # with 进入时调用
+        self.connected = True
+        print(f"  [连接数据库: {self.db_name}]")
+        return self  # 返回值赋给 as 后的变量
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # with 退出时调用（即使发生异常也会执行）
+        self.connected = False
+        print(f"  [断开数据库: {self.db_name}]")
+        # 返回 True 会抑制异常，返回 False（或 None）会让异常继续传播
+        return False
+
+    def query(self, sql):
+        if not self.connected:
+            raise RuntimeError("数据库未连接")
+        return f"执行查询: {sql} -> 结果集"
+
+
 def main():
     # ========== 1. __call__ 让实例像函数一样调用 ==========
     print("=== 1. __call__ 可调用对象 ===")
-
-    class Multiplier:
-        """可调用对象：实例可以像函数一样被调用"""
-        def __init__(self, factor):
-            self.factor = factor
-
-        def __call__(self, x):
-            return x * self.factor
 
     double = Multiplier(2)
     triple = Multiplier(3)
@@ -32,23 +146,6 @@ def main():
 
     # ========== 2. __len__ / __getitem__ 容器模拟 ==========
     print("\n=== 2. 容器模拟：__len__ / __getitem__ ===")
-
-    class Playlist:
-        """模拟一个播放列表，支持 len() 和索引访问"""
-        def __init__(self, songs):
-            self._songs = list(songs)
-
-        def __len__(self):
-            # len(obj) 会调用此方法
-            return len(self._songs)
-
-        def __getitem__(self, index):
-            # obj[index] 会调用此方法
-            return self._songs[index]
-
-        def __contains__(self, song):
-            # in 运算符会调用此方法
-            return song in self._songs
 
     pl = Playlist(["晴天", "七里香", "夜曲", "稻香"])
     print(f"歌单长度: {len(pl)}")
@@ -60,24 +157,6 @@ def main():
     # ========== 3. __iter__ 迭代器协议 ==========
     print("\n=== 3. __iter__ 可迭代对象 ===")
 
-    class Countdown:
-        """倒计时迭代器"""
-        def __init__(self, start):
-            self.start = start
-
-        def __iter__(self):
-            # 返回一个迭代器
-            self.current = self.start
-            return self
-
-        def __next__(self):
-            # 每次迭代调用，直到 StopIteration
-            if self.current < 0:
-                raise StopIteration
-            value = self.current
-            self.current -= 1
-            return value
-
     print("倒计时:", end=" ")
     for n in Countdown(3):
         print(n, end=" ")
@@ -85,30 +164,6 @@ def main():
 
     # ========== 4. 比较运算：__eq__ / __lt__ ==========
     print("\n=== 4. 比较运算：__eq__ / __lt__ ===")
-
-    class Money:
-        """带比较运算的钱包类"""
-        def __init__(self, amount):
-            self.amount = amount
-
-        def __eq__(self, other):
-            # == 运算符
-            if isinstance(other, Money):
-                return self.amount == other.amount
-            return NotImplemented
-
-        def __lt__(self, other):
-            # < 运算符
-            if isinstance(other, Money):
-                return self.amount < other.amount
-            return NotImplemented
-
-        def __le__(self, other):
-            # <= 运算符
-            return self.__lt__(other) or self.__eq__(other)
-
-        def __repr__(self):
-            return f"Money({self.amount})"
 
     a = Money(100)
     b = Money(200)
@@ -121,25 +176,6 @@ def main():
     # ========== 5. 算术运算：__add__ ==========
     print("\n=== 5. 算术运算：__add__ ===")
 
-    class Vector:
-        """二维向量，支持加法运算"""
-        def __init__(self, x, y):
-            self.x = x
-            self.y = y
-
-        def __add__(self, other):
-            # + 运算符
-            if isinstance(other, Vector):
-                return Vector(self.x + other.x, self.y + other.y)
-            return NotImplemented
-
-        def __mul__(self, scalar):
-            # * 运算符（标量乘法）
-            return Vector(self.x * scalar, self.y * scalar)
-
-        def __repr__(self):
-            return f"Vector({self.x}, {self.y})"
-
     v1 = Vector(1, 2)
     v2 = Vector(3, 4)
     print(f"{v1} + {v2} = {v1 + v2}")
@@ -147,30 +183,6 @@ def main():
 
     # ========== 6. 上下文管理器：__enter__ / __exit__ ==========
     print("\n=== 6. 上下文管理器：__enter__ / __exit__ ===")
-
-    class DatabaseConnection:
-        """模拟数据库连接，支持 with 语句"""
-        def __init__(self, db_name):
-            self.db_name = db_name
-            self.connected = False
-
-        def __enter__(self):
-            # with 进入时调用
-            self.connected = True
-            print(f"  [连接数据库: {self.db_name}]")
-            return self  # 返回值赋给 as 后的变量
-
-        def __exit__(self, exc_type, exc_val, exc_tb):
-            # with 退出时调用（即使发生异常也会执行）
-            self.connected = False
-            print(f"  [断开数据库: {self.db_name}]")
-            # 返回 True 会抑制异常，返回 False（或 None）会让异常继续传播
-            return False
-
-        def query(self, sql):
-            if not self.connected:
-                raise RuntimeError("数据库未连接")
-            return f"执行查询: {sql} -> 结果集"
 
     with DatabaseConnection("test_db") as db:
         result = db.query("SELECT * FROM users")
@@ -217,3 +229,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# ============================================================
+# 相关主题:
+#   - 07-io/04_with_statement.py  → __enter__/__exit__ 上下文管理器协议
+# ============================================================

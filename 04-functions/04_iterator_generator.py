@@ -7,6 +7,9 @@ yield from、生成器管道。
 参考: https://www.runoob.com/python3/python3-iterator-generator.html
 """
 
+from collections.abc import Iterable, Iterator
+import sys
+
 
 def demo_iterable_and_iterator():
     """演示 1: 可迭代对象与迭代器协议"""
@@ -16,8 +19,6 @@ def demo_iterable_and_iterator():
 
     # 可迭代对象 (Iterable): 实现了 __iter__() 方法，返回迭代器
     # 迭代器 (Iterator): 实现了 __iter__() 和 __next__() 方法
-
-    from collections.abc import Iterable, Iterator
 
     # 列表是可迭代对象
     my_list = [1, 2, 3]
@@ -162,7 +163,6 @@ def demo_generator_expression():
     print(f"  生成器表达式内容: {list(squares_gen)}")
 
     # 内存效率对比
-    import sys
     big_list = [x for x in range(100000)]
     big_gen = (x for x in range(100000))
     print(f"\n  内存占用 (range(100000)):")
@@ -310,3 +310,8 @@ if __name__ == "__main__":
     demo_yield_from()
     demo_generator_pipeline()
     print("\n[OK] 所有迭代器与生成器演示完成！")
+
+# ============================================================
+# 相关主题:
+#   - 03-control-flow/04_comprehensions.py  → 推导式与生成器表达式的对比
+# ============================================================

@@ -273,7 +273,6 @@ def demo_gil():
     print(explanation)
 
     # 演示: CPU 密集型任务
-    import time
 
     def cpu_intensive():
         """纯 CPU 计算（无 I/O 操作）"""
@@ -313,3 +312,8 @@ if __name__ == "__main__":
     demo_thread_pool()
     demo_gil()
     print("\n=== 所有多线程演示完成! ===")
+
+# ============================================================
+# 相关主题:
+#   - 10-advanced/05_multiprocessing.py  → GIL受限→多进程突破并行
+# ============================================================

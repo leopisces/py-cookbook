@@ -51,6 +51,7 @@ def main():
     print("\n=== 4. 模拟被导入时的行为 ===")
 
     # 使用 importlib 导入自己，观察 __name__ 的变化
+    # 注: 此处导入用于演示模块自我导入行为与 __name__ 属性
     import importlib.util
 
     # 获取当前文件路径

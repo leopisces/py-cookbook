@@ -9,6 +9,9 @@ Python 字符串
   - 转义字符与原始字符串
 """
 
+import re
+
+
 def main():
     # ========== 1. 字符串的创建 ==========
     print("=== 1. 字符串的创建 ===")
@@ -158,7 +161,6 @@ def main():
     print(f"原始字符串路径: {raw_path}")
 
     # 原始字符串也适用于正则表达式
-    import re
     text = "price: $100.00"
     # 不使用原始字符串，需要双反斜杠
     match1 = re.findall("\\$\\d+", text)
