@@ -48,6 +48,14 @@ body {
   background: #94a3b8;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
 /* 输出面板中的代码样式 */
 pre {
   margin: 0;

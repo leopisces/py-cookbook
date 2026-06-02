@@ -1,6 +1,5 @@
 import { Outlet, useParams, Navigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import ThemeToggle from "./ThemeToggle";
 import type { Chapter } from "../types/content";
 
 interface LayoutProps {

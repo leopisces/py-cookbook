@@ -1,5 +1,3 @@
-import { useTheme } from "../hooks/useTheme";
-
 interface ThemeToggleProps {
   theme: "light" | "dark";
   toggleTheme: () => void;
