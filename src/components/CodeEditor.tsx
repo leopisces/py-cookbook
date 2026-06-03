@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -9,11 +10,24 @@ interface CodeEditorProps {
 }
 
 export default function CodeEditor({ value, onChange, readOnly = false }: CodeEditorProps) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <CodeMirror
       value={value}
       height="100%"
-      theme={oneDark}
+      theme={isDark ? oneDark : undefined}
       extensions={[python()]}
       onChange={onChange}
       readOnly={readOnly}

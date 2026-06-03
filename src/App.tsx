@@ -38,7 +38,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage data={data} theme={theme} toggleTheme={toggleTheme} />} />
-        <Route path="/learn" element={<Layout chapters={data.chapters} theme={theme} toggleTheme={toggleTheme} />}>
+        <Route path="/learn" element={<Layout data={data} theme={theme} toggleTheme={toggleTheme} />}>
           <Route index element={
             firstSection
               ? <Navigate to={`/learn/${firstSection.chapterId}/${firstSection.sectionId}`} replace />

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 interface PyodideState {
   isLoaded: boolean;
@@ -17,7 +17,6 @@ async function loadPyodideOnce(): Promise<unknown> {
   if (pyodidePromise) return pyodidePromise;
 
   pyodidePromise = (async () => {
-    // 动态加载 Pyodide 脚本
     if (!(window as unknown as Record<string, unknown>).loadPyodide) {
       await new Promise<void>((resolve, reject) => {
         const script = document.createElement("script");
@@ -49,6 +48,63 @@ export function usePyodide() {
 
   const outputRef = useRef("");
   const errorRef = useRef("");
+  const streamQueueRef = useRef("");
+  const streamDoneRef = useRef(false);
+  const streamTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Push queued output to state progressively
+  const flushStream = useCallback(() => {
+    const queue = streamQueueRef.current;
+    if (!queue) {
+      // Queue empty — check if execution is done
+      if (streamDoneRef.current) {
+        clearInterval(streamTimerRef.current!);
+        streamTimerRef.current = null;
+        setState((s) => ({
+          ...s,
+          isRunning: false,
+          output: outputRef.current.trimEnd(),
+          error: errorRef.current.trimEnd(),
+        }));
+      }
+      return;
+    }
+
+    const newlineIdx = queue.indexOf("\n");
+    let chunk: string;
+    if (newlineIdx !== -1) {
+      chunk = queue.slice(0, newlineIdx + 1);
+      streamQueueRef.current = queue.slice(newlineIdx + 1);
+    } else {
+      const take = Math.min(queue.length, 8);
+      chunk = queue.slice(0, take);
+      streamQueueRef.current = queue.slice(take);
+    }
+
+    outputRef.current += chunk;
+    setState((s) => ({ ...s, output: outputRef.current }));
+  }, []);
+
+  const startStream = useCallback(() => {
+    if (streamTimerRef.current) return;
+    streamDoneRef.current = false;
+    streamTimerRef.current = setInterval(flushStream, 30);
+  }, [flushStream]);
+
+  const stopStream = useCallback(() => {
+    // Don't flush — just mark done so the timer drains the queue naturally
+    streamDoneRef.current = true;
+  }, []);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (streamTimerRef.current) {
+        clearInterval(streamTimerRef.current);
+        streamTimerRef.current = null;
+      }
+    };
+  }, []);
 
   const load = useCallback(async () => {
     if (pyodideInstance || state.isLoading) return;
@@ -65,22 +121,28 @@ export function usePyodide() {
     }
   }, [state.isLoading]);
 
+  // Auto-load on mount
+  useEffect(() => {
+    if (!pyodideInstance && !state.isLoading && !state.isLoaded) {
+      load();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const runCode = useCallback(
     async (code: string) => {
-      console.log("[Pyodide] runCode called, pyodideInstance:", pyodideInstance, "isLoaded:", state.isLoaded);
       if (!pyodideInstance) {
-        console.log("[Pyodide] No instance, calling load()");
         await load();
       }
       if (!pyodideInstance) {
-        console.log("[Pyodide] Still no instance after load, returning");
         return;
       }
 
-      console.log("[Pyodide] Running code:", code.substring(0, 50));
-      setState((s) => ({ ...s, isRunning: true, output: "", error: "" }));
+      // Reset
       outputRef.current = "";
       errorRef.current = "";
+      streamQueueRef.current = "";
+      stopStream();
+      setState((s) => ({ ...s, isRunning: true, output: "", error: "" }));
 
       try {
         const pyodide = pyodideInstance as {
@@ -90,39 +152,55 @@ export function usePyodide() {
           globals: { get: (name: string) => unknown };
         };
 
+        // Queue output for streaming instead of pushing directly
         pyodide.setStdout({
           batched: (msg: string) => {
-            outputRef.current += msg + "\n";
+            streamQueueRef.current += msg + "\n";
           },
         });
         pyodide.setStderr({
           batched: (msg: string) => {
             errorRef.current += msg + "\n";
+            setState((s) => ({ ...s, error: errorRef.current }));
           },
         });
 
-        // 运行代码（重置全局变量避免跨课污染）
+        startStream();
+
         await pyodide.runPythonAsync(code);
 
+        // Execution done — mark done, let timer drain queue naturally
+        stopStream();
+      } catch (err) {
+        stopStream();
+        // Force cleanup on error
+        if (streamTimerRef.current) {
+          clearInterval(streamTimerRef.current);
+          streamTimerRef.current = null;
+        }
+        const errMsg = err instanceof Error ? err.message : String(err);
+        outputRef.current = streamQueueRef.current + outputRef.current;
+        streamQueueRef.current = "";
         setState((s) => ({
           ...s,
           isRunning: false,
           output: outputRef.current.trimEnd(),
-          error: errorRef.current.trimEnd(),
-        }));
-      } catch (err) {
-        const errMsg = err instanceof Error ? err.message : String(err);
-        setState((s) => ({
-          ...s,
-          isRunning: false,
           error: (errorRef.current ? errorRef.current + "\n" : "") + errMsg,
         }));
       }
     },
-    [load]
+    [load, startStream, stopStream]
   );
 
   const reset = useCallback(() => {
+    if (streamTimerRef.current) {
+      clearInterval(streamTimerRef.current);
+      streamTimerRef.current = null;
+    }
+    streamQueueRef.current = "";
+    streamDoneRef.current = false;
+    outputRef.current = "";
+    errorRef.current = "";
     setState((s) => ({ ...s, output: "", error: "" }));
   }, []);
 
