@@ -67,11 +67,17 @@ export function usePyodide() {
 
   const runCode = useCallback(
     async (code: string) => {
+      console.log("[Pyodide] runCode called, pyodideInstance:", pyodideInstance, "isLoaded:", state.isLoaded);
       if (!pyodideInstance) {
+        console.log("[Pyodide] No instance, calling load()");
         await load();
       }
-      if (!pyodideInstance) return;
+      if (!pyodideInstance) {
+        console.log("[Pyodide] Still no instance after load, returning");
+        return;
+      }
 
+      console.log("[Pyodide] Running code:", code.substring(0, 50));
       setState((s) => ({ ...s, isRunning: true, output: "", error: "" }));
       outputRef.current = "";
       errorRef.current = "";

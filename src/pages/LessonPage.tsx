@@ -21,11 +21,11 @@ export default function LessonPage({ data }: LessonPageProps) {
 
   if (!result) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full bg-surface-50 dark:bg-surface-900">
         <div className="text-center">
-          <div className="text-4xl mb-4">😕</div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">页面未找到</h2>
-          <p className="text-gray-500">
+          <div className="text-5xl mb-4">😕</div>
+          <h2 className="text-xl font-semibold text-surface-700 dark:text-surface-200 mb-2">页面未找到</h2>
+          <p className="text-surface-400 dark:text-surface-500 text-sm">
             章节 {chapterId}/{sectionId} 不存在
           </p>
         </div>

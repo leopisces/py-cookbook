@@ -24,9 +24,9 @@ export default function Layout({ chapters, theme, toggleTheme }: LayoutProps) {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="flex h-screen bg-surface-50 dark:bg-surface-950 transition-colors duration-200 ease-out">
       <Sidebar chapters={chapters} theme={theme} toggleTheme={toggleTheme} />
-      <main className="flex-1 overflow-auto bg-white dark:bg-gray-800 transition-colors">
+      <main className="flex-1 overflow-auto bg-white dark:bg-surface-900 shadow-xs transition-colors duration-200 ease-out">
         <Outlet />
       </main>
     </div>

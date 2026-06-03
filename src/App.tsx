@@ -11,10 +11,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="flex items-center justify-center h-screen bg-surface-50 dark:bg-surface-950 transition-colors duration-200 ease-out">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">加载内容...</p>
+          <div className="w-8 h-8 border-[3px] border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-surface-400 dark:text-surface-500 text-sm font-medium">加载内容...</p>
         </div>
       </div>
     );
@@ -22,11 +22,11 @@ export default function App() {
 
   if (error || !data) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="flex items-center justify-center h-screen bg-surface-50 dark:bg-surface-950 transition-colors duration-200 ease-out">
         <div className="text-center">
           <div className="text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">加载失败</h2>
-          <p className="text-gray-500 dark:text-gray-400">{error || "无法加载内容数据"}</p>
+          <h2 className="text-xl font-semibold text-surface-700 dark:text-surface-200 mb-2">加载失败</h2>
+          <p className="text-surface-400 dark:text-surface-500 text-sm">{error || "无法加载内容数据"}</p>
         </div>
       </div>
     );

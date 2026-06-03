@@ -41,18 +41,22 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
       />
 
       <div className="flex-1 flex flex-col min-h-0">
-        {/* 工具栏 */}
-        <div className="flex items-center justify-between px-4 py-2 bg-gray-800 dark:bg-gray-900
-                        border-b border-gray-700 dark:border-gray-800 transition-colors">
-          <span className="text-sm text-gray-400 dark:text-gray-500 font-mono">
+        {/* Toolbar */}
+        <div className="flex items-center justify-between px-4 py-2.5
+                        bg-surface-800 dark:bg-surface-900
+                        border-b border-surface-700/60 dark:border-surface-800/60
+                        transition-colors duration-200 ease-out">
+          <span className="text-xs text-surface-400 dark:text-surface-500 font-mono tracking-wide">
             {section.chapterId}/{section.id}.py
           </span>
           <div className="flex items-center gap-2">
             <button
               onClick={handleReset}
-              className="px-3 py-1 text-sm text-gray-400 dark:text-gray-500 hover:text-white
-                         bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700
-                         rounded transition-colors"
+              className="px-3 py-1.5 text-xs font-medium text-surface-400 dark:text-surface-500
+                         hover:text-white bg-surface-700/80 dark:bg-surface-800
+                         hover:bg-surface-600 dark:hover:bg-surface-700
+                         rounded-lg transition-all duration-150 ease-out
+                         active:scale-95"
             >
               重置
             </button>
@@ -60,10 +64,11 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
               onClick={handleRun}
               disabled={pyodide.isRunning || pyodide.isLoading}
               className={`
-                px-4 py-1 text-sm font-medium rounded transition-colors
+                px-4 py-1.5 text-xs font-semibold rounded-lg
+                transition-all duration-150 ease-out active:scale-95
                 ${pyodide.isRunning || pyodide.isLoading
-                  ? "bg-gray-600 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-500 text-white"
+                  ? "bg-surface-600 dark:bg-surface-700 text-surface-400 dark:text-surface-500 cursor-not-allowed"
+                  : "bg-primary-600 hover:bg-primary-500 text-white shadow-sm shadow-primary-600/25 hover:shadow-md hover:shadow-primary-500/30"
                 }
               `}
             >
@@ -72,8 +77,8 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
           </div>
         </div>
 
-        {/* 代码编辑器区域 */}
-        <div className="flex-1 min-h-0" style={{ minHeight: "300px" }}>
+        {/* Code editor */}
+        <div className="flex-[2] min-h-0 overflow-auto">
           <CodeEditor
             value={code}
             onChange={setCode}
@@ -81,8 +86,9 @@ export default function CodeRunner({ section }: CodeRunnerProps) {
           />
         </div>
 
-        {/* 输出面板 */}
-        <div style={{ height: "200px", minHeight: "120px" }}>
+        {/* Output panel */}
+        <div className="flex-1 min-h-[120px] max-h-[250px] overflow-auto
+                        border-t border-surface-700/60 dark:border-surface-800/60">
           <OutputPanel
             output={pyodide.output}
             error={pyodide.error}

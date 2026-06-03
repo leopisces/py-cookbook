@@ -7,13 +7,14 @@ export default function ThemeToggle({ theme, toggleTheme }: ThemeToggleProps) {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300
-                 dark:hover:bg-gray-600 transition-colors"
+      className="p-2 rounded-xl bg-surface-100 dark:bg-surface-700/60
+                 hover:bg-surface-200 dark:hover:bg-surface-600
+                 transition-all duration-200 ease-out active:scale-90
+                 border border-surface-200/60 dark:border-surface-600/30"
       title={theme === "dark" ? "切换到亮色模式" : "切换到暗色模式"}
     >
       {theme === "dark" ? (
-        // 太阳图标 - 亮色模式
-        <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-[18px] h-[18px] text-amber-400 transition-transform duration-300 ease-out hover:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -22,8 +23,7 @@ export default function ThemeToggle({ theme, toggleTheme }: ThemeToggleProps) {
           />
         </svg>
       ) : (
-        // 月亮图标 - 暗色模式
-        <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-[18px] h-[18px] text-surface-500 transition-transform duration-300 ease-out hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
