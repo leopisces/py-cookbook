@@ -207,7 +207,7 @@ function scanChapterDir(chapterDir: string, chapterId: string): Section[] {
   const sections: Section[] = [];
   const files = fs
     .readdirSync(chapterDir)
-    .filter((f) => f.endsWith(".py") && !f.startsWith("__"))
+    .filter((f: string) => f.endsWith(".py") && !f.startsWith("__"))
     .sort();
 
   for (const file of files) {
@@ -252,7 +252,7 @@ function main() {
 
   const chapterDirs = fs
     .readdirSync(DEMOS_ROOT)
-    .filter((d) => /^\d{2}-/.test(d) && fs.statSync(path.join(DEMOS_ROOT, d)).isDirectory())
+    .filter((d: string) => /^\d{2}-/.test(d) && fs.statSync(path.join(DEMOS_ROOT, d)).isDirectory())
     .sort();
 
   const chapters: Chapter[] = [];
